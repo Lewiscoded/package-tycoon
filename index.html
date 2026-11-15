@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Package Tycoon</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <!-- ===== top bar: a row of chunky sticker chips ===== -->
+  <header id="topbar" class="hidden">
+    <div class="brand chip"><span class="logo">📦</span><span>Package <b>Tycoon</b></span></div>
+
+    <div class="spacer"></div>
+
+    <div class="chip" id="chip-day" title="Day and time left in the shift">
+      <span class="ico" style="--c: var(--sun)">☀️</span>
+      <div class="chip-stack">
+        <small>Day <b id="day">1</b> · <span id="time-text" class="mono">1:30</span></small>
+        <div class="bar"><div id="time-fill"></div></div>
+      </div>
+    </div>
+
+    <div class="chip" id="chip-money" title="Cash">
+      <span class="ico" style="--c: var(--mint)">💰</span>
+      <b id="money" class="mono">$0</b>
+      <span id="money-delta"></span>
+    </div>
+
+    <div class="chip" id="chip-rep" title="Reputation: changes how much shipments pay">
+      <span class="ico" style="--c: var(--peach)">⭐</span>
+      <div class="chip-stack">
+        <small>Rep <b id="rep" class="mono">60</b></small>
+        <div class="bar"><div id="rep-fill"></div></div>
+      </div>
+    </div>
+
+    <div class="chip" id="chip-trucks" title="Trucks available">
+      <span class="ico" style="--c: var(--sky)">🚚</span><b id="trucks" class="mono">2/2</b>
+    </div>
+
+    <button class="chip chip-btn" id="chip-rp" title="Research Lab (R)">
+      <span class="ico" style="--c: var(--lilac)">🔬</span><b id="rp" class="mono">0</b>
+    </button>
+
+    <div class="chip speed" id="speed">
+      <button data-speed="0" title="Pause (Space)">❚❚</button>
+      <button data-speed="1" title="Normal speed (1)">1×</button>
+      <button data-speed="2" title="Fast (2)">2×</button>
+      <button data-speed="3" title="Fastest (3)">3×</button>
+    </div>
+
+    <button id="manage-btn" class="btn" title="Hire staff & buy upgrades (M)">🏢 Manage</button>
+    <button id="menu-btn" class="btn round" title="Menu (Esc)">☰</button>
+  </header>
+
+  <!-- ===== bottom-left sticker cards ===== -->
+  <div id="side" class="hidden">
+    <div id="contract" class="sticker"></div>
+    <div id="crew-card" class="sticker"></div>
+  </div>
+
+  <!-- versus: rival scoreboard + sabotage bar -->
+  <div id="vs-card" class="sticker hidden"></div>
+  <div id="ability-bar" class="hidden"></div>
+
+  <div id="banner" class="hidden"></div>
+  <div id="paused-banner" class="hidden">❚❚ Paused <small>press Space</small></div>
+  <div id="toasts"></div>
+  <div id="world-ui"></div>
+  <p id="hint" class="hidden">Drag packages into matching bins · <kbd>Space</kbd> pause · <kbd>M</kbd> manage · <kbd>R</kbd> research · <kbd>Q</kbd>–<kbd>T</kbd> ship · scroll to zoom</p>
+
+  <!-- ===== management drawer ===== -->
+  <aside id="manage" class="panel">
+    <div class="drawer-head">
+      <div class="tabs">
+        <button data-tab="staff" class="active">👷 Staff</button>
+        <button data-tab="upgrades">🛠️ Upgrades</button>
+        <button data-tab="stats">📈 Stats</button>
+      </div>
+      <button id="manage-close" class="btn round small" title="Close (M)">✕</button>
+    </div>
+    <div id="manage-body"></div>
+  </aside>
+
+  <!-- ===== full-screen menus ===== -->
+  <div id="modal" class="hidden"><div id="modal-panel" class="panel"></div></div>
+
+  <!-- three.js (classic build so it works when you double-click index.html) -->
+  <script src="https://cdn.jsdelivr.net/npm/three@0.149.0/build/three.min.js"></script>
+  <!-- PeerJS: direct, encrypted browser-to-browser connections for online Versus -->
+  <script src="https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/world.js"></script>
+  <script src="js/entities.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/net.js"></script>
+  <script src="js/game.js"></script>
+</body>
+</html>
