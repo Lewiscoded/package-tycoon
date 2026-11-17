@@ -1,12 +1,14 @@
 # Package Tycoon
 
+**Version 1.0.0** · [Play it here](https://lewiscoded.github.io/package-tycoon/) · [Changelog](CHANGELOG.md)
+
 A cozy 3D package-sorting tycoon game in HTML, CSS and JavaScript (three.js).
 Double-click `index.html` to play (needs an internet connection to load three.js).
 
 ## Files
 - `index.html`: page layout and HUD
 - `css/style.css`: all the styling
-- `js/config.js`: **balance numbers**: routes, staff, upgrades, day length
+- `js/config.js`: **version number** and **balance numbers**: routes, staff, upgrades, day length
 - `js/audio.js`: synth sound effects
 - `js/world.js`: 3D scene: warehouse, belt, lights, models, particles
 - `js/entities.js`: bins, packages, trucks, staff models
@@ -23,3 +25,9 @@ Double-click `index.html` to play (needs an internet connection to load three.js
 
 ## Playing online
 Open the hosted page, click **Play online (Versus)**, and either create a room or enter your friend's code.
+
+## Versions & releases
+- The current version lives in `GAME_VERSION` in `js/config.js` and is shown on the title screen.
+- Every release gets an entry in `CHANGELOG.md` and a git tag (`v1.0.0`, `v1.1.0`, ...).
+- `index.html` loads files with `?v=<version>` so players get the new files after a release instead of old cached ones.
+- In online Versus, both players should be on the same version (the game warns if they aren't).

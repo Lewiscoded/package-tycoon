@@ -416,6 +416,7 @@ function showTitle() {
       <h1>${word("Package", "a")}<br>${word("Tycoon", "b")}</h1>
     </div>
     <p>Sort packages, hire a cozy crew, research cool tech, and grow a shipping empire that runs itself.</p>
+    <span class="version-tag">v${GAME_VERSION}</span>
     ${legacy.earned ? `<div class="trophy-badge">🏆 ${legacy.earned} trophies · +${Math.round(TROPHY_BONUS * 100 * legacy.earned)}% income</div>` : ""}
     <div class="stack">
       ${saved ? `<button class="btn big mint" id="m-continue">▶ Continue: Day ${saved.day} · ${fmt(saved.money)}</button>` : ""}
@@ -468,7 +469,8 @@ function showPauseMenu() {
       <button class="btn secondary" id="m-help">❓ How to play</button>
       <button class="btn danger" id="m-quit">🚪 Quit to title</button>
     </div>
-    <p class="muted" style="font-size:.85rem">The game saves automatically at the end of each day. Quitting mid-shift restarts today.</p>`);
+    <p class="muted" style="font-size:.85rem">The game saves automatically at the end of each day. Quitting mid-shift restarts today.</p>
+    <span class="version-tag">v${GAME_VERSION}</span>`);
   $("m-resume").onclick = resumeFromMenu;
   $("m-settings").onclick = () => showSettings(showPauseMenu);
   $("m-help").onclick = () => showHelp(showPauseMenu);

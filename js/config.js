@@ -1,4 +1,10 @@
 // =====================================================
+//  Package Tycoon version (bump this for every release,
+//  and add an entry to CHANGELOG.md)
+// =====================================================
+const GAME_VERSION = "1.0.0";
+
+// =====================================================
 //  config.js: all the numbers you might want to tweak
 // =====================================================
 

@@ -129,7 +129,7 @@ const Versus = {
   setupConn(c) {
     this.conn = c;
     c.on("open", () => {
-      this.send("hello", { name: this.name, v: 1 });
+      this.send("hello", { name: this.name, v: 1, version: GAME_VERSION });
       if (this.isHost) {
         this.seed = Math.floor(Math.random() * 1e9);
         this.send("start", { seed: this.seed });
@@ -152,6 +152,9 @@ const Versus = {
     switch (msg.t) {
       case "hello":
         this.oppName = String(msg.name || "Rival").slice(0, 14);
+        if (msg.version && msg.version !== GAME_VERSION) {
+          toast(`⚠ ${escapeHtml(this.oppName)} is on v${escapeHtml(String(msg.version))}, you're on v${GAME_VERSION}. Both refresh the page so you match!`, "bad", 8000);
+        }
         if (o) o.name = this.oppName;
         break;
       case "full":

@@ -815,3 +815,13 @@ body.drawer-open #toasts { right: 412px; }
 .slider-row input[type=range] { -webkit-appearance: none; appearance: none; height: 12px; border: 2.5px solid var(--ink); border-radius: 999px; background: var(--paper); cursor: pointer; }
 .slider-row input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 22px; height: 22px; border-radius: 50%; border: 3px solid var(--ink); background: var(--sun); box-shadow: 0 2px 0 var(--ink); }
 .slider-row input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 50%; border: 3px solid var(--ink); background: var(--sun); }
+
+.version-tag {
+  padding: 0.05rem 0.6rem;
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+  background: var(--paper);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--ink-soft);
+}
