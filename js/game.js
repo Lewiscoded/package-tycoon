@@ -287,6 +287,7 @@ function startDay() {
   showReport.waitingForStart = false;
   clearWorld();
   today = null;
+  save(); // save at the start of every day, so "Continue" always points at the company you're playing
   layoutBins();
   syncTrucks();
   syncStaff();

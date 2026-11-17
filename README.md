@@ -1,6 +1,6 @@
 # Package Tycoon
 
-**Version 1.0.1** · [Play it here](https://lewiscoded.github.io/package-tycoon/) · [Changelog](CHANGELOG.md)
+**Version 1.0.2** · [Play it here](https://lewiscoded.github.io/package-tycoon/) · [Changelog](CHANGELOG.md)
 
 A cozy 3D package-sorting tycoon game in HTML, CSS and JavaScript (three.js).
 Double-click `index.html` to play (needs an internet connection to load three.js).
