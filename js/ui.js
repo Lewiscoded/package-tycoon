@@ -416,17 +416,18 @@ function showTitle() {
       <h1>${word("Package", "a")}<br>${word("Tycoon", "b")}</h1>
     </div>
     <p>Sort packages, hire a cozy crew, research cool tech, and grow a shipping empire that runs itself.</p>
-    <span class="version-tag">v${GAME_VERSION}</span>
     ${legacy.earned ? `<div class="trophy-badge">🏆 ${legacy.earned} trophies · +${Math.round(TROPHY_BONUS * 100 * legacy.earned)}% income</div>` : ""}
     <div class="stack">
       ${saved ? `<button class="btn big mint" id="m-continue">▶ Continue: Day ${saved.day} · ${fmt(saved.money)}</button>` : ""}
       <button class="btn big ${saved ? "secondary" : ""}" id="m-new">✨ New company</button>
       <button class="btn big lilac" id="m-versus">⚔️ Play online (Versus)</button>
       ${legacy.franchises ? `<button class="btn lilac" id="m-perks">🏆 Legacy Perks (${legacy.trophies} to spend)</button>` : ""}
-      <div class="row"><button class="btn secondary" id="m-help">❓ How to play</button>
-        <button class="btn secondary" id="m-settings">⚙️ Settings</button></div>
+      <div class="row tight"><button class="btn secondary" id="m-help">❓ How to play</button>
+        <button class="btn secondary" id="m-settings">⚙️ Settings</button>
+        <button class="btn secondary" id="m-info">ℹ️ Info</button></div>
     </div>`);
   $("m-settings").onclick = () => showSettings(showTitle);
+  $("m-info").onclick = () => showInfo(showTitle);
   if ($("m-perks")) $("m-perks").onclick = () => showPerks(showTitle);
   $("m-versus").onclick = () => { Sound.unlock(); Versus.showLobby(); };
   if (saved) $("m-continue").onclick = () => { Sound.unlock(); loadGame(saved); startDay(); };
@@ -467,13 +468,14 @@ function showPauseMenu() {
       <button class="btn big" id="m-resume">▶ Resume</button>
       <button class="btn secondary" id="m-settings">⚙️ Settings</button>
       <button class="btn secondary" id="m-help">❓ How to play</button>
+      <button class="btn secondary" id="m-info">ℹ️ Info</button>
       <button class="btn danger" id="m-quit">🚪 Quit to title</button>
     </div>
-    <p class="muted" style="font-size:.85rem">The game saves automatically at the end of each day. Quitting mid-shift restarts today.</p>
-    <span class="version-tag">v${GAME_VERSION}</span>`);
+    <p class="muted" style="font-size:.85rem">The game saves automatically at the end of each day. Quitting mid-shift restarts today.</p>`);
   $("m-resume").onclick = resumeFromMenu;
   $("m-settings").onclick = () => showSettings(showPauseMenu);
   $("m-help").onclick = () => showHelp(showPauseMenu);
+  $("m-info").onclick = () => showInfo(showPauseMenu);
   $("m-quit").onclick = () => { paused = false; clearWorld(); showTitle(); };
 }
 
@@ -694,3 +696,38 @@ function showPerks(back) {
 
 // redraw canvas signs once the cartoon font has loaded
 if (document.fonts) document.fonts.ready.then(() => bins.forEach(b => (b.signText = "")));
+
+// =====================================================
+//  Info / credits
+// =====================================================
+const GAME_INFO = {
+  creator: "lewiscoded",
+  creatorUrl: "https://github.com/Lewiscoded",
+  sourceUrl: "https://github.com/Lewiscoded/package-tycoon",
+  changelogUrl: "https://github.com/Lewiscoded/package-tycoon/blob/main/CHANGELOG.md",
+  playUrl: "https://lewiscoded.github.io/package-tycoon/",
+};
+
+function showInfo(back) {
+  const link = (url, text) => `<a href="${url}" target="_blank" rel="noopener noreferrer">${text}</a>`;
+  showModal(`
+    <div class="title-logo"><span class="box">📦</span></div>
+    <h2>Package Tycoon</h2>
+    <span class="version-tag">Version ${GAME_VERSION}</span>
+    <div class="info-card">
+      <div class="info-row"><span>🎮 Created by</span><b>${link(GAME_INFO.creatorUrl, GAME_INFO.creator)}</b></div>
+      <div class="info-row"><span>💻 Source code</span>${link(GAME_INFO.sourceUrl, "GitHub repo")}</div>
+      <div class="info-row"><span>📝 What's new</span>${link(GAME_INFO.changelogUrl, "Changelog")}</div>
+      <div class="info-row"><span>🌐 Play online</span>${link(GAME_INFO.playUrl, "Game link")}</div>
+    </div>
+    <div class="info-card">
+      <div class="info-title">🙏 Built with</div>
+      <div class="info-row"><span>3D graphics</span>${link("https://threejs.org", "three.js")}</div>
+      <div class="info-row"><span>Online play</span>${link("https://peerjs.com", "PeerJS")}</div>
+      <div class="info-row"><span>Font</span>${link("https://fonts.google.com/specimen/Fredoka", "Fredoka")}</div>
+      <div class="info-row"><span>Music &amp; sounds</span><span>Original, generated live in code</span></div>
+    </div>
+    <p class="muted" style="font-size:.85rem">Thanks for playing! 💛</p>
+    <button class="btn big" id="i-back">◀ Back</button>`);
+  $("i-back").onclick = back;
+}

@@ -3,6 +3,11 @@
 All notable changes to Package Tycoon. Versions follow [Semantic Versioning](https://semver.org/):
 `MAJOR.MINOR.PATCH`: major = big overhauls or save-breaking changes, minor = new features, patch = bug fixes.
 
+## [1.0.1] - 2026-11-17
+### Changed
+- Version number moved off the title screen into a new **ℹ️ Info** screen (title screen and pause menu)
+- Info screen shows the creator (lewiscoded), links to the source code, changelog and live game, and credits
+
 ## [1.0.0] - 2026-11-17
 First official release. 🎉
 

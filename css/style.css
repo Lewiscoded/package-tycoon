@@ -825,3 +825,23 @@ body.drawer-open #toasts { right: 412px; }
   font-weight: 600;
   color: var(--ink-soft);
 }
+
+/* info screen */
+.info-card {
+  width: 100%;
+  max-width: 420px;
+  padding: 0.7rem 1.1rem;
+  background: var(--paper);
+  border: var(--line);
+  border-radius: 20px;
+  box-shadow: 0 4px 0 var(--ink);
+  text-align: left;
+}
+.info-title { font-weight: 700; margin-bottom: 0.3rem; }
+.info-row { display: flex; justify-content: space-between; gap: 1rem; padding: 0.22rem 0; font-size: 0.95rem; }
+.info-row a { color: #2f7fd6; font-weight: 600; text-decoration: none; border-bottom: 2px dashed #7cc6fe; }
+.info-row a:hover { color: var(--ink); border-bottom-color: var(--sun); }
+.row.tight { flex-wrap: nowrap; gap: 0.45rem; }
+.row.tight .btn { padding: 0.4rem 0.75rem; font-size: 0.88rem; }
+.stack:has(.row.tight) { max-width: 390px; }
+.info-row > span:first-child { white-space: nowrap; }
