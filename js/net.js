@@ -416,7 +416,7 @@ const Versus = {
     } else {
       this.send("attack", { kind: id });
       toast(`${a.icon} Sent <b>${a.name}</b> to ${escapeHtml(this.opp.name)}!`, "good", 2500);
-      Sound.play("ship");
+      Sound.play("zap");
     }
   },
 
@@ -449,7 +449,7 @@ const Versus = {
     el.textContent = e;
     document.body.appendChild(el);
     setTimeout(() => el.remove(), 1800);
-    if (!mine) Sound.play("click");
+    Sound.play("pop");
   },
 
   // ---------- HUD ----------

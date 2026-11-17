@@ -12,12 +12,13 @@ let gameSpeed = 1;
 //  Settings
 // =====================================================
 const settings = Object.assign(
-  { sound: true, shadows: true, hints: true, pauseOnManage: false },
+  { sound: true, shadows: true, hints: true, pauseOnManage: false, musicVol: 0.5, sfxVol: 0.8 },
   (() => { try { return JSON.parse(localStorage.getItem(SETTINGS_KEY)) || {}; } catch (e) { return {}; } })()
 );
 
 function applySettings() {
   Sound.setEnabled(settings.sound);
+  Sound.setVolumes(settings.musicVol, settings.sfxVol);
   if (renderer.shadowMap.enabled !== settings.shadows) {
     renderer.shadowMap.enabled = settings.shadows;
     scene.traverse(o => { if (o.material) [].concat(o.material).forEach(m => (m.needsUpdate = true)); });
@@ -214,7 +215,7 @@ function doResearch(id, silent = false) {
   game.research[id] = true;
   if (id === "nightshift" && today && phase === "day") today.timeLeft += 30;
   if (!silent) {
-    Sound.play("bonus");
+    Sound.play("research");
     toast(`🔬 Researched <b>${r.name}</b>!`, "good");
     afterPurchase();
   }
@@ -315,6 +316,7 @@ function startDay() {
   showHUD(true);
   applySettings();
   updateSideCards();
+  Sound.play("dayStart");
   toast(isVersus()
     ? `⚔️ <b>Day ${game.day} of ${VERSUS.days}</b>: go go go! Contract: ${target} to ${ROUTES[routeIndex].name}.`
     : `☀️ <b>Day ${game.day}</b> begins. Contract: ${target} packages to ${ROUTES[routeIndex].name}.`);
@@ -391,7 +393,7 @@ function franchise() {
   clearWorld();
   phase = "menu";
   showHUD(false);
-  Sound.play("bonus");
+  Sound.play("fanfare");
   showFranchiseDone(gained);
 }
 
@@ -449,6 +451,7 @@ function landInBin(p) {
     burst(p.mesh.position, ["#ffcc4d", "#ffffff", bin.route.color], 16);
   }
   if (p.by === "player") Sound.play("drop");
+  else Sound.play("plop", { pan: Sound.panFor(bin.group.position.x), vol: 0.8 });
 
   const c = today.contract;
   if (!c.done && p.routeIndex === c.routeIndex) {
@@ -528,7 +531,8 @@ function ship(bin, silent = false) {
   }
 
   popup(`+${fmt(payout)}`, "#7dff9b", bin.group.position.clone().setY(2.4));
-  Sound.play("ship");
+  Sound.play("ship", { pan: Sound.panFor(bin.group.position.x) });
+  setTimeout(() => Sound.play("engine", { pan: -0.7 }), 150);
 
   // move the boxes out of the bin onto the pallet by the road
   const cargo = bin.boxes.splice(0);
@@ -569,6 +573,7 @@ function updateTrucks(dt) {
       t.timer -= dt;
       if (t.timer <= 0) {
         t.state = "leaving";
+        Sound.play("horn", { pan: Sound.panFor(m.position.x) });
         t.speed = 4;
         t.bin.truckComing = false;
         t.cargo = null;
@@ -603,7 +608,8 @@ function updateTrucks(dt) {
 function jamBelt(sabotage = false) {
   if (today.jam) return;
   today.jam = { repair: null };
-  Sound.play("alarm");
+  Sound.play("clank", { pan: Sound.panFor(beltCenterX) });
+  setTimeout(() => Sound.play("alarm"), 250);
   toast(`${sabotage ? "😈 Your rival <b>jammed your belt!</b>" : "⚠ <b>The belt jammed!</b>"} ${game.staff.technician ? "Technician is on it." : "Click <b>Fix belt jam</b> before customers give up."}`, "bad");
 }
 
@@ -642,7 +648,7 @@ function updateStationStaff(dt) {
           s.broken = false;
           s.repair = null;
           if (techTask && techTask.s === s) techTask = null;
-          Sound.play("fix");
+          Sound.play("fix", { pan: Sound.panFor(sx) });
           popup("🔧 FIXED", "#7dff9b", s.model.group.position.clone().setY(3.4));
         }
       }
@@ -673,13 +679,15 @@ function updateStationStaff(dt) {
     } else {
       sendToBin(best, bins[best.routeIndex], s.type);
       s.carrying = best;
+      Sound.play(s.type === "robot" ? "servo" : "whoosh", { pan: Sound.panFor(sx), vol: 0.8 });
     }
     s.cooldown = s.type === "robot" ? ROBOT_TIME : sorterTime();
 
     if (s.type === "robot" && Math.random() < breakChance()) {
       s.broken = true;
       s.repair = null;
-      Sound.play("alarm");
+      Sound.play("powerdown", { pan: Sound.panFor(sx) });
+      setTimeout(() => Sound.play("alarm"), 600);
       toast(`🤖 A Robo-Sorter broke down! ${game.staff.technician ? "Technician is on the way." : "Click <b>Repair</b> to fix it."}`, "bad");
     }
   }
@@ -727,6 +735,7 @@ function updateDrones(dt) {
 
     if (d.target && Math.abs(pos.x - d.target.mesh.position.x) < 0.6 && Math.abs(pos.z - d.target.mesh.position.z) < 0.8) {
       sendToBin(d.target, bins[d.target.routeIndex], "drone");
+      Sound.play("zip", { pan: Sound.panFor(pos.x), vol: 0.8 });
       d.carrying = d.target;
       d.target = null;
       d.cooldown = 0.9;
@@ -796,6 +805,7 @@ function simulate(dt) {
       if (pos.x > BELT_END + 0.3 && has("recycle") && !p.recycled) {
         p.recycled = true;
         popup("♻ LOOPED", "#7cc6fe", pos);
+        Sound.play("boing", { pan: Sound.panFor(BELT_END) });
         pos.x = BELT_START;
         burst(pos.clone().setY(BELT_TOP + 0.5), ["#7cc6fe", "#ffffff"], 8, 3);
       } else if (pos.x > BELT_END + 0.3) {
@@ -827,6 +837,7 @@ function simulate(dt) {
       p.mesh.rotation.x += p.spin.x * dt;
       p.mesh.rotation.z += p.spin.z * dt;
       if (pos.y < PKG / 2) {
+        if (!p.landed) { p.landed = true; Sound.play("thud", { pan: Sound.panFor(pos.x) }); }
         pos.y = PKG / 2;
         p.vel.multiplyScalar(0.3);
         p.vel.y = Math.abs(p.vel.y) * 0.3;
@@ -1093,6 +1104,11 @@ function loop() {
   animate(dt);
   Versus.tick(dt);
 
+  // music: drums during a shift, calm on menus, muffled while paused
+  const stopped = phase === "day" && simPaused();
+  Sound.setMusicMode(phase !== "day" ? "calm" : stopped ? "muffled" : "full");
+  Sound.setBelt(phase === "day" && !stopped && today && !today.jam ? Math.min(1, beltSpeed() / 2.5) : 0);
+
   if (phase === "day") {
     updateHUD();
     updateWorldButtons();
@@ -1120,3 +1136,9 @@ syncTrucks();
 applySettings();
 showTitle();
 loop();
+
+// browsers only allow sound after the first click/tap; also give every button a soft click
+document.addEventListener("pointerdown", () => Sound.unlock(), { capture: true });
+document.addEventListener("click", e => {
+  if (e.target.closest(".btn, .tabs button, .speed button, .chip-btn, .switch, .ability, .emote-btn, .world-btn")) Sound.play("click");
+}, { capture: true });

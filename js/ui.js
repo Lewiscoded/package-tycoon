@@ -422,8 +422,10 @@ function showTitle() {
       <button class="btn big ${saved ? "secondary" : ""}" id="m-new">✨ New company</button>
       <button class="btn big lilac" id="m-versus">⚔️ Play online (Versus)</button>
       ${legacy.franchises ? `<button class="btn lilac" id="m-perks">🏆 Legacy Perks (${legacy.trophies} to spend)</button>` : ""}
-      <button class="btn secondary" id="m-help">❓ How to play</button>
+      <div class="row"><button class="btn secondary" id="m-help">❓ How to play</button>
+        <button class="btn secondary" id="m-settings">⚙️ Settings</button></div>
     </div>`);
+  $("m-settings").onclick = () => showSettings(showTitle);
   if ($("m-perks")) $("m-perks").onclick = () => showPerks(showTitle);
   $("m-versus").onclick = () => { Sound.unlock(); Versus.showLobby(); };
   if (saved) $("m-continue").onclick = () => { Sound.unlock(); loadGame(saved); startDay(); };
@@ -482,15 +484,27 @@ function showSettings(back) {
   const row = (key, label, sub) => `
     <div class="toggle-row" style="width:100%"><span style="text-align:left">${label}<br><small class="muted">${sub}</small></span>
       <button class="switch ${settings[key] ? "on" : ""}" data-setting="${key}"></button></div>`;
+  const slider = (key, label) => `
+    <label class="slider-row"><span>${label}</span>
+      <input type="range" min="0" max="100" value="${Math.round(settings[key] * 100)}" data-volume="${key}">
+      <b>${Math.round(settings[key] * 100)}</b></label>`;
   showModal(`
     <h2>⚙️ Settings</h2>
     <div class="item" style="width:100%;max-width:380px">
-      ${row("sound", "🔊 Sound effects", "Beeps and dings")}
+      ${row("sound", "🔊 Sound", "Music and sound effects on/off")}
+      ${slider("musicVol", "🎵 Music")}
+      ${slider("sfxVol", "💥 Effects")}
       ${row("shadows", "🌗 Shadows", "Turn off if the game runs slowly")}
       ${row("hints", "💡 Control hints", "Bottom-of-screen key reminders")}
       ${row("pauseOnManage", "⏸ Pause while managing", "Freeze the belt when the Manage panel is open")}
     </div>
     <button class="btn big" id="m-back">Back</button>`);
+  document.querySelectorAll("[data-volume]").forEach(input => (input.oninput = () => {
+    settings[input.dataset.volume] = input.value / 100;
+    input.nextElementSibling.textContent = input.value;
+    applySettings();
+  }));
+  document.querySelectorAll("[data-volume='sfxVol']").forEach(input => (input.onchange = () => Sound.play("drop")));
   document.querySelectorAll("[data-setting]").forEach(b => (b.onclick = () => {
     settings[b.dataset.setting] = !settings[b.dataset.setting];
     applySettings();

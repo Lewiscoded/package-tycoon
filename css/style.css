@@ -808,3 +808,10 @@ body.drawer-open #toasts { right: 412px; }
   .ability .a-name { display: none; }
   #vs-card { width: 220px; }
 }
+
+/* volume sliders */
+.slider-row { display: grid; grid-template-columns: 90px 1fr 34px; align-items: center; gap: 0.6rem; padding: 0.35rem 0; font-size: 0.95rem; }
+.slider-row b { text-align: right; font-variant-numeric: tabular-nums; }
+.slider-row input[type=range] { -webkit-appearance: none; appearance: none; height: 12px; border: 2.5px solid var(--ink); border-radius: 999px; background: var(--paper); cursor: pointer; }
+.slider-row input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 22px; height: 22px; border-radius: 50%; border: 3px solid var(--ink); background: var(--sun); box-shadow: 0 2px 0 var(--ink); }
+.slider-row input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 50%; border: 3px solid var(--ink); background: var(--sun); }
